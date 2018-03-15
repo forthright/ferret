@@ -1,7 +1,8 @@
+import path = require("path")
 import commander = require("commander")
-import plugin_require = require("./../plugin/require")
 import _ = require("lodash")
 import os_name = require("os-name")
+import plugin_require = require("./../plugin/require")
 
 const pkg = require("./../../package")
 
@@ -20,7 +21,7 @@ const create = (cli : commander.CommanderStatic) =>
       console.log("ferret", pkg.version)
       plugin_require.available_modules().then((mods : string[][]) => {
         _.each(mods, (mod : string[]) => {
-          console.log(_.last(_.split(mod[0], "/")), _.last(mod))
+          console.log(_.last(_.split(mod[0], path.sep)), _.last(mod))
         })
         log_node_versions()
       })

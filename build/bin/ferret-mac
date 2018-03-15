@@ -1,0 +1,10 @@
+#!/bin/sh
+# coreutils (realpath) doesn't ship by default, but perl does!
+script_path=$(perl -e 'use Cwd "abs_path"; print abs_path(@ARGV[0])' "$0")
+root_dir=`dirname "$script_path"`/..
+
+node_bin="$root_dir/lib/node/bin/node"
+ferret_bin="$root_dir/node_modules/@forthright/ferret/bin/ferret"
+ferret_plugins=$root_dir
+
+FERRET_PLUGINS_PATH=$ferret_plugins "$node_bin" "$ferret_bin" "$@"

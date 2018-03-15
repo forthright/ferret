@@ -57,7 +57,8 @@ license:
       - LGPL
       - GPL
       - BSD
-      - Apache
+      - Apache-2.0
+      - Apache*
       - Unlicense
       - Artistic
       - WTFPL

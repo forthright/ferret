@@ -7,10 +7,6 @@ checkout:
     - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
     - git checkout -f $CIRCLE_BRANCH
 
-dependencies:
-  pre:
-    - sh bin/list-env-versions
-
 test:
   override:
-    - npm run -s test-ci-build && npm run -s ferret
+    - npm run -s test:ci && npm run -s ferret

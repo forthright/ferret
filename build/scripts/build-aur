@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+require("./sh")
+
+const LIN_DIST = join(DIST_DIR, LIN_PKG_NAME)
+const LIN_DIST_ARCHIVE = join(DIST_DIR, LIN_PKG_NAME + '.tar.gz')
+
+const PKGBUILD_TEMPLATE = join(BUILD_DIR, 'PKGBUILD')
+
+const TEMP_BUILD_DIR = join(ROOT_DIR, '.build', 'aur')
+const TEMP_PKGBUILD = join(TEMP_BUILD_DIR, 'PKGBUILD')
+
+echo('==> Generating PKGBUILD+tar.xz')
+
+echo('  -> Cleaning AUR temp build dir')
+if (test('-d', TEMP_BUILD_DIR)) rm('-r', TEMP_BUILD_DIR)
+mkdir('-p', TEMP_BUILD_DIR)
+
+echo('  -> Copying over PKGBUILD template')
+cp(PKGBUILD_TEMPLATE, TEMP_PKGBUILD)
+
+echo(`  -> Setting version: ${APP_VERSION}`)
+sed('-i', /#FERRET_VERSION#/g, APP_VERSION, TEMP_PKGBUILD)
+
+const sha = sha256sum(LIN_DIST_ARCHIVE)
+echo(`  -> Updating PKGBUILD checksum (${sha})`)
+sed('-i', /#FERRET_SHA#/g, sha, TEMP_PKGBUILD)
+
+cd(TEMP_BUILD_DIR)
+
+echo('  -> Generating tar.xz')
+exec('makepkg -C')
+
+echo('  -> Linting package')
+exec(`namcap ${join('..', '*')}`)
+
+echo('  -> Moving package+PKGBUILD to dist')
+
+mv(join('..', '*.tar.xz'), DIST_DIR)
+cp('PKGBUILD', DIST_DIR)
+
+cd('-')
+
+generate_checksums()

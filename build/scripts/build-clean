@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+require("./sh")
+
+echo('==> Cleaning...')
+echo('  -> dist dir')
+rm('-rf', DIST_DIR)
+echo('  -> generated default config')
+rm('-rf', join(BUILD_DIR, 'default'))
+echo('  -> log files')
+rm('-rf', join(BUILD_DIR, '*.log'))
+echo('  -> info file links')
+rm(join(BUILD_DIR, '*.md'))
+rm(join(BUILD_DIR, 'LICENSE'))
+exec('npm run compile:clean -s')

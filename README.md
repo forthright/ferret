@@ -34,13 +34,24 @@ Ferret
 
 ## Synopsis
 
-Ferret is composed of 3 core units:
+Ferret is a powerful, general purpose code quality tool designed for any language or environment.
 
-1. A general purpose [analysis library](https://docs.ferretci.com/analyze)
-2. A language-agnostic [metadata spec](https://docs.ferretci.com/plugins)
-3. A web based [continuous analysis service](https://ferretci.com) and data API
+It makes use of your existing build environment to run fast, secure local analysis while using
+its hosted service to provide rich web reports, intelligent insights, and third party integrations.
 
-## Demo
+#### Features
+
+* :electric_plug: Easy to install packages for your CI server or dev machine
+* :fire: Supports [14+ languages & environments](https://docs.ferretci.com/lang) (JavaScript, TypeScript, Node.js, npm, Ruby, Rails, Bundler, PHP etc.)
+* :muscle: Tracks complex code, outdated dependencies, code style & maintainability, test coverage holes, security alerts and [more]()
+* :raising_hand: Integrates seamlessly with traditional linter tools and development workflows
+* :shower: Schedules routine builds for popular services like CircleCI, AppVeyor, and Codeship
+* :clock2: Properly handles multiple builds with support for branches and duplicate commits
+* :email: Keeps you notified of new issues and insights via email and Slack
+* :wrench: Flexible, modular, easy to use [plugin system]()
+* :hearts: Available on [Windows](), [macOS](), [Ubuntu](), [Fedora](), [Arch Linux]() and [more]()
+
+#### Demo
 
 <p align="center">
   <a href="https://asciinema.org/a/137383" target="_blank">
@@ -48,42 +59,34 @@ Ferret is composed of 3 core units:
   </a>
 </p>
 
-## Features
-
-* :part_alternation_mark: Track code quality over time
-* :muscle: Get automated insights and suggestions based on the current state of your project
-* :email: Get notified about new issues and insights
-* :raising_hand: Collaborate with other users
-* :octocat: Set GitHub pull request statuses
-* :shower: Schedule routine CI builds for popular services like CircleCI, AppVeyor, and Codeship
-* :fire: Analyze complexity & churn
-* :truck: Track outdated software packages
-* :mag: Identify similar and duplicate code
-* :globe_with_meridians: Track your test coverage
-* :closed_lock_with_key: Check for vulnerabilities in libraries and code
-* :clock2: Capture commit data
-* :wrench: Run traditional linter tools
-* :electric_plug: Flexible and easy to use plugin system
-* :hearts: Supports Windows, Linux, and MacOS
-
 ## Installation & Usage
 
 See [docs.ferretci.com](https://docs.ferretci.com).
 
-## Contributing
+#### Contributing
 
 Any contributions are welcome and appreciated!
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for more info.
 
-## Licensing
+#### Licensing
 
 This project is licensed under the [MPL-2.0](LICENSE) license.
 
-## Versioning
+#### Versioning
 
 This project uses [Semver](http://semver.org).
 
-## Maintainers
+#### Maintainers
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)
+
+#### Donations
+
+A lot of work and cost goes into development and maintenance of this project.
+
+If you find this useful and want to support the people making it:
+
+* Purchase a [private](https://ferretci.com/pricing) subscription
+* Make a [non-monetary](CONTRIBUTING.md) contribution
+* Or just [say hi](https://twitter.com/ferretci)!

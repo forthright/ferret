@@ -1,8 +1,8 @@
-bin/* linguist-vendored
-build/* linguist-vendored
 lib/* linguist-vendored
-test/* linguist-vendored
 meta/* linguist-vendored
-docs/* linguist-vendored
+test/* linguist-vendored
 
 * text eol=lf
+
+*.bat eol=crlf
+*.cmd eol=crlf

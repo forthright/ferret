@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+PACKAGE = $(firstword $(shell dh_listpackages))
+TMP     = $(CURDIR)/debian/$(PACKAGE)
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_auto_install
+	mkdir -p $(TMP)/opt/ferret
+	mkdir $(TMP)/opt/ferret/bin
+	mkdir $(TMP)/opt/ferret/lib
+	cp -L README.md $(TMP)/opt/ferret/README.md
+	cp -L CHANGELOG.md $(TMP)/opt/ferret/CHANGELOG.md
+	cp -L LICENSE $(TMP)/opt/ferret/LICENSE
+	cp -rL bin/ferret $(TMP)/opt/ferret/bin
+	cp -rL lib/node $(TMP)/opt/ferret/lib
+	cp -rL default $(TMP)/opt/ferret
+	cp -rL node_modules $(TMP)/opt/ferret

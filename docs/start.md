@@ -7,12 +7,12 @@ You will first need to install its CLI and library on your local machine or CI s
 ## Installation
 
 The recommended way to install and update Ferret is through your favourite OS's
-package manager. Many GNU/Linux distros and package formats are supported,
-along with Windows and MacOS.
+package manager. Many Linux distros and package formats are supported,
+along with Windows and macOS.
 
 ### Package Manager
 
-#### MacOS
+#### macOS
 
 Using [Homebrew](https://brew.sh):
 
@@ -23,11 +23,9 @@ Using [Homebrew](https://brew.sh):
 
 Using [Chocolatey](https://chocolatey.org/):
 
-    cinst ferret
+    choco install ferret
 
 #### Ubuntu
-
-(unless we just use build.opensuse.org?)
 
 Using a custom [PPA](https://launchpad.net/~brentlintner/+archive/ubuntu/ferret-code):
 
@@ -35,52 +33,69 @@ Using a custom [PPA](https://launchpad.net/~brentlintner/+archive/ubuntu/ferret-
     apt update
     apt install ferret-code
 
+#### Fedora
+
+Grab the [rpm]() for now:
+
+    curl https://... > ferret..rpm
+    dnf install ... ferret..rpm
+
 #### Debian
 
-Use [build.opensuse.org](https://build.opensuse.org/).
+Grab the latest [deb]().
+
+    curl https://... > ferret-..deb
+    dpkg -i ferret-..deb
 
 #### Arch Linux
 
 Using an [AUR](https://aur.archlinux.org/packages/ferret) package:
 
     pacman -S pacaur
-    pacaur -S ferret
+    pacaur -S ferret-bin
+
+Or if you want to install the arch pkg tarball manually, grab it from [releases]():
+
+    curl https://... ferret-..tar.xz
+    pacman -U ferret....tar.xz
 
 #### openSUSE
 
-Using an [build.opensuse.org](https://build.opensuse.org/):
+Grab the [rpm]() for now:
 
-    ....
-    yast install ferret
-
-#### Fedora
-
-Using an [build.opensuse.org](https://build.opensuse.org/):
-
-    ....
-    dnf install ferret
+    wget https://... > ferret..rpm
+    zypper in ferret...rpm
 
 #### CentOS
 
-Using an [build.opensuse.org](https://build.opensuse.org/):
+Grab the [rpm]() for now:
 
-    yum-....
-    yum install ferret
+    curl https://... > ferret..rpm
+    yum install ... ferret..rpm
 
-### Platform Binaries
+#### Other OSes
 
-There are binary packages available for Linux, Windows and MacOS.
+Ideally things like like some [BSDs](), and
+even [Flatpak]() or [Snap]() are supported in the future.
+
+Don't see your favourite package manager yet?
+
+Please [open and issue]() and tell us!
+
+### Installing Manually
+
+There are tarball and zip packages available for Linux, Windows and macOS.
 
 Grab a tarball from the [Releases](https://github.com/forthright/ferret/releases) page.
 
-    echo "SHASUM  ferret-v0.9.2-linux-x86_64.tgz" | sha256sum -c
-    tar -xvf ferret-v0.9.2-linux-x86_64.tgz
-    cd ferret-v0.9.2-linux-x86_64
-    ./ferret -h
+    echo "SHASUM  ferret-v0.19.6-linux-x86_64.tar.gz" | sha256sum -c
+    tar -xvf ferret-v0.19.6-linux-x86_64.tar.gz
+    cd ferret-v0.19.6-linux-x86_64
+    ./bin/ferret -h
 
 Or, similarly, on Windows:
 
-    ferret.exe -h
+    bin\ferret.cmd -h
 
 ### Install By "Source"
 
@@ -95,11 +110,24 @@ To install packages manually, or if you are familiar with an npm setup:
     npm i --save-dev @forthright/ferret-comment
     npm i --save-dev @forthright/ferret-typescript
     npm i --save-dev @forthright/ferret-....
+    npx ferret configure
+    npx ferret analyze
 
-For more details on installing via `npm` see [here](/lang/#plugins).
+### Installing Custom Plugins
+
+To install custom plugins alongside Ferret's bundled ones:
+
+    cd my_project/
+    npm i --save-dev @forthright/ferret
+    npm i --save-dev ferret-my-plugin
+    ferret configure
+    ferret analyze -p my-plugin
+
+Note: If you use something like `npx ferret` in this case,
+it will *not* be able to run globally installed plugins.
 
 ## Checking The Install
 
 To see exactly what plugins and versions are being used, you can run:
 
-    ferret modules
+    ferret version

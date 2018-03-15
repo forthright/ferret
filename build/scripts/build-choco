@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+require("./sh")
+
+const NUPKG_FILE     = `ferret.${APP_VERSION}.nupkg`
+const SPEC_FILE      = 'ferret.nuspec'
+const CINST_FILE     = 'chocolateyinstall.ps1'
+const BUILD_TOOLS    = join(BUILD_DIR, 'tools')
+const BUILD_NUSPEC   = join(BUILD_DIR, SPEC_FILE)
+const TEMP_BUILD_DIR = join(ROOT_DIR, '.build', 'choco')
+const TEMP_CINST     = join(TEMP_BUILD_DIR, 'tools', CINST_FILE)
+const TEMP_SPEC_FILE = join(TEMP_BUILD_DIR, SPEC_FILE)
+
+echo(`==> Generating ${NUPKG_FILE}`)
+
+echo('  -> Cleaning temp build dir')
+if (test('-d', TEMP_BUILD_DIR)) rm('-r', TEMP_BUILD_DIR)
+mkdir('-p', TEMP_BUILD_DIR)
+
+echo('  -> Generating nuspec from template')
+cp(BUILD_NUSPEC, TEMP_SPEC_FILE)
+
+echo('  -> Copying over tool files')
+cp('-r', BUILD_TOOLS, TEMP_BUILD_DIR)
+
+cd(TEMP_BUILD_DIR)
+
+echo(`  -> Setting version: ${APP_VERSION} (${SPEC_FILE})`)
+sed('-i', /#FERRET_VERSION#/g, APP_VERSION, TEMP_SPEC_FILE)
+
+echo(`  -> Setting version: ${APP_VERSION} (${CINST_FILE})`)
+sed('-i', /#FERRET_VERSION#/g, APP_VERSION, TEMP_CINST)
+
+const WIN_DIST_ZIP   = join(DIST_DIR, WIN_PKG_NAME + '.zip')
+const sha = sha256sum(WIN_DIST_ZIP)
+echo(`  -> Updating pkg checksum (${sha})`)
+sed('-i', /#FERRET_SHA#/g, sha, TEMP_CINST)
+
+echo('  -> Packing Chocolatey/NuGet package')
+exec('choco.exe pack -v')
+cd('-')
+
+echo('  -> Moving nupkg to dist')
+mv(join(TEMP_BUILD_DIR, NUPKG_FILE), join(DIST_DIR, NUPKG_FILE))
+
+generate_checksums()

@@ -349,28 +349,25 @@ const exec = (
     .then((mods : string[][]) => {
       const installed_plugins = _.map(mods,
         (mod : string[]) =>
-        _.last(_.split(mod[0], "/")))
+        _.last(_.split(mod[0], path.sep)))
 
-      log.debug("available:", "\n" + installed_plugins.join("\n"))
       log.debug(
-        "allow via .ferret.yml =>",
+        ".ferret.yml =>",
         allowed_plugins_via_config.join(", ") || "any")
       log.debug(
-        "allow via opts =>",
+        "cli =>",
         allowed_plugins_via_opts.join(", ") || "any")
       log.debug(
-        "allow via additional_opts =>",
+        "extra =>",
         allowed_plugins_via_additional_opts.join(", ") || "any")
-      log.debug("skip core plugins =>", !!opts.skip_core_plugins)
 
       const to_run = plugin_require.filter(
         installed_plugins,
         allowed_plugins_via_config,
         allowed_plugins_via_opts,
-        allowed_plugins_via_additional_opts,
-        !!opts.skip_core_plugins)
+        allowed_plugins_via_additional_opts)
 
-      log.debug("to run: ", to_run.join(", "))
+      log.debug("to run:", "\n=>", to_run.join("\n=> "))
 
       return execute_plugins(
         to_run,

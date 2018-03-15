@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+require("./../../node_modules/shelljs/global")
+
+set('+e')
+
+env.NODE_ENV = 'production'
+
+const path  = require("path")
+const pkg   = require("./../../package")
+const hasha = require("./../../node_modules/hasha")
+
+global.tar  = require("./../../node_modules/tar")
+
+global.dirname  = path.dirname
+global.basename = path.basename
+global.resolve  = path.resolve
+global.join     = path.join
+
+global.APP_VERSION   = pkg.version
+global.TARGET_ARCH   = 'x86_64'
+global.PKG_NAME      = 'ferret'
+global.FED_RELEASE   = 'f27'
+
+global.SCRIPT_NAME   = process.argv[1]
+global.SCRIPT_DIR    = dirname(SCRIPT_NAME)
+
+global.ROOT_DIR      = join(SCRIPT_DIR, '..', '..')
+global.DIST_DIR      = join(ROOT_DIR, 'dist')
+global.BUILD_DIR     = join(ROOT_DIR, 'build')
+global.BUILD_LIB_DIR = join(BUILD_DIR, 'lib')
+
+global.NODE_VERS     = '9.10.1'
+global.NODE_LIN      = `node-v${NODE_VERS}-linux-x64`
+global.NODE_MAC      = `node-v${NODE_VERS}-darwin-x64`
+global.NODE_WIN      = `node-v${NODE_VERS}-win-x64`
+global.LIN_PKG_NAME  = `${PKG_NAME}-${APP_VERSION}-linux-${TARGET_ARCH}`
+global.MAC_PKG_NAME  = `${PKG_NAME}-${APP_VERSION}-mac-${TARGET_ARCH}`
+global.WIN_PKG_NAME  = `${PKG_NAME}-${APP_VERSION}-win-${TARGET_ARCH}`
+
+global.sha256sum = (fpath) =>
+  hasha.fromFileSync(fpath, { algorithm: 'sha256' })
+
+global.generate_checksums = () => {
+  echo('==> Generating checksums')
+  const sha_sums = join(DIST_DIR, 'sha256sums.txt')
+  rm(sha_sums)
+  touch(sha_sums)
+  ls(DIST_DIR)
+    .filter((tpath) => test('-f', join(DIST_DIR, tpath)))
+    .filter((tpath) => /nupkg|tar|zip|deb|rpm/i.test(tpath))
+    .forEach((tpath) => {
+      const sum = sha256sum(join(DIST_DIR, tpath))
+      echo(`${sum}  ${tpath}\n`).toEnd(sha_sums)
+    })
+}

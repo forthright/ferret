@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+require("./sh")
+
+const MAC_DIST_ARCHIVE = join(DIST_DIR, MAC_PKG_NAME + '.tar.gz')
+
+const TAP_REPO = join(ROOT_DIR, '..', 'homebrew-ferret')
+const TAP_REPO_FORMULA = join(TAP_REPO, 'Formula', 'ferret.rb')
+
+const BUILD_FORMULA = join(BUILD_DIR, 'formula.rb')
+
+const TEMP_BUILD_DIR = join(ROOT_DIR, '.build', 'homebrew')
+const TEMP_FORMULA = join(TEMP_BUILD_DIR, 'formula.rb')
+
+echo('==> Generating Homebrew formula')
+
+echo('  -> Cleaning temp build dir')
+if (test('-d', TEMP_BUILD_DIR)) rm('-r', TEMP_BUILD_DIR)
+mkdir('-p', TEMP_BUILD_DIR)
+
+echo(`  -> Copying formula template to temp build dir`)
+cp('-f', BUILD_FORMULA, TEMP_FORMULA)
+
+echo(`  -> Setting version: ${APP_VERSION}`)
+sed('-i', /#FERRET_VERSION#/g, APP_VERSION, TEMP_FORMULA)
+
+const sha = sha256sum(MAC_DIST_ARCHIVE)
+echo(`  -> Updating pkg checksum (${sha})`)
+sed('-i', /#FERRET_SHA#/g, sha, TEMP_FORMULA)
+
+echo(`  -> Copying formula to: ${TAP_REPO_FORMULA}`)
+cp('-f', TEMP_FORMULA, TAP_REPO_FORMULA)

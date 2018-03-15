@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+require("./sh")
+
+exec("npm run -s compile")
+exec("npm run -s test-cov")
+exec("npm run -s lint-cov")

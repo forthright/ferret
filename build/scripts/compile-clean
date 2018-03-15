@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+require("./sh")
+
+echo('  -> rm .nyc_output')
+rm('-r', join(ROOT_DIR, '.nyc_output'))
+
+echo('  -> rm coverage')
+rm('-r', join(ROOT_DIR, 'coverage'))
+
+echo('  -> rm lib')
+rm('-r', join(ROOT_DIR, 'lib'))
+
+echo('  -> git checkout -- lib')
+exec('git checkout -- lib')

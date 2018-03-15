@@ -1,7 +1,7 @@
 # Language Support
 
 If you are installing Ferret [by "source"](/start/#install-by-source) then this section
-will be helpful. If you are using the pre-compiled binary which
+will be helpful. If you are using the pre-compiled package which
 comes loaded with all available official plugins, you only need to
 really worry about [configuring your project](/analyze/#configure-your-project).
 
@@ -17,7 +17,7 @@ You can find a full list of official plugins [here](https://ferretci.com/plugins
 There are also various "meta plugins" that provide a full set of plugins
 for a specific language or framework.
 
-Below are all the meta plugins that are bundled with Ferret's binaries.
+Below are all the meta plugins that are bundled with Ferret's non-source packages.
 
 ## JavaScript
 
@@ -149,7 +149,7 @@ Note: Swift support is limited and is a WIP.
 
 ## Other Languages
 
-Other languages such as [Java](), [Kotlin](), [Go](), [Python](), [C/C++](), [Objective-C](), and
-other scripting/styling/template languages are also on the radar/planned.
+Other languages such as [Java](), [Kotlin](), [Go](), [Python](), [C/C++](), [Objective-C]() , [Rust](), [Elixir](), [Crystal]()
+and other scripting/styling/template languages are also on the radar/planned.
 
-Want to help or have a plugin that supports a new language? [Say hi](https://twitter.com/ferretci)!
+Want to help or have a plugin that supports a new language? [Say hi](https://github.com/forthright/ferret/issues/new)!

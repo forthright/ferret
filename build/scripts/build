@@ -1,0 +1,316 @@
+#!/usr/bin/env node
+require("./sh")
+
+const fs = require("fs")
+
+const OS_BUILD    = process.argv[2]
+
+const install_libs = () => {
+  const NODE_BUILDS = 'https://nodejs.org/dist/v' + NODE_VERS
+
+  echo('==> Checking for local Node.js libs...')
+
+  if (!test('-d', BUILD_LIB_DIR)) {
+    mkdir('-p', BUILD_LIB_DIR)
+  }
+
+  const lib_lin_path = join(BUILD_LIB_DIR, NODE_LIN)
+  const lib_lin_tar_path = lib_lin_path + '.tar.gz'
+  const lib_mac_path = join(BUILD_LIB_DIR, NODE_MAC)
+  const lib_mac_tar_path = lib_mac_path + '.tar.gz'
+  const lib_win_path = join(BUILD_LIB_DIR, NODE_WIN)
+  const lib_win_zip_path = lib_win_path + '.zip'
+
+  if (OS_BUILD == 'linux' && !test('-d', lib_lin_path)) {
+    if (test('-d', lib_lin_path)) return
+    const lin_node_url = NODE_BUILDS + '/' + NODE_LIN + '.tar.gz'
+    echo('  -> Fetch ' + lin_node_url)
+    exec(`curl ${lin_node_url} > ${lib_lin_tar_path}`)
+    cd(BUILD_LIB_DIR)
+    echo('  -> Extracting')
+    tar.x({ sync: true, file: NODE_LIN + '.tar.gz' })
+    echo('  -> Linking as lib/node')
+    ln('-sf', NODE_LIN, 'node')
+    cd('-')
+  } else if (OS_BUILD == 'mac' && !test('-d', lib_mac_path)) {
+    if (test('-d', lib_mac_path)) return
+    const mac_node_url = NODE_BUILDS + '/' + NODE_MAC + '.tar.gz'
+    echo('  -> Fetch ' + mac_node_url)
+    exec(`curl ${mac_node_url} > ${lib_mac_tar_path}`)
+    cd(BUILD_LIB_DIR)
+    echo('  -> Extracting')
+    tar.x({ sync: true, file: NODE_MAC + '.tar.gz' })
+    ln('-sf', NODE_MAC, 'node')
+    cd('-')
+  } else if (OS_BUILD == 'win' && !test('-d', lib_win_path)) {
+    if (test('-d', lib_win_path)) return
+    const win_node_url = NODE_BUILDS + '/' + NODE_WIN + '.zip'
+    echo('  -> Fetch ' + win_node_url)
+    exec(`curl ${win_node_url} > ${lib_win_zip_path}`)
+    cd(BUILD_LIB_DIR)
+    echo('  -> Extracting')
+    exec(`unzip -q ${NODE_WIN}.zip`)
+    ln('-sf', NODE_WIN, 'node')
+    cd('-')
+  }
+
+  if (test('-d', lib_lin_path)) { echo('  -> ' + NODE_LIN + ' ok') }
+  if (test('-d', lib_mac_path)) { echo('  -> ' + NODE_MAC + ' ok') }
+  if (test('-d', lib_win_path)) { echo('  -> ' + NODE_WIN + ' ok') }
+}
+
+const copy_node_runtime = (target_dist, target_node, target_os) => {
+  rm('-r', join(target_dist, 'lib', 'node'))
+  mkdir('-p', join(target_dist, 'lib', 'node'))
+  ln(
+    '-sf',
+    join(BUILD_LIB_DIR, target_node, 'README.md'),
+    join(target_dist, 'lib', 'node', 'README.md'))
+  ln(
+    '-sf',
+    join(BUILD_LIB_DIR, target_node, 'CHANGELOG.md'),
+    join(target_dist, 'lib', 'node', 'CHANGELOG.md'))
+  ln(
+    '-sf',
+    join(BUILD_LIB_DIR, target_node, 'LICENSE'),
+    join(target_dist, 'lib', 'node', 'LICENSE'))
+
+  const dist_node_bin = join(target_dist, 'lib', 'node', 'bin')
+  mkdir('-p', dist_node_bin)
+  if (target_os == 'win') {
+    ln(
+      '-sf',
+      join(BUILD_LIB_DIR, target_node, 'node.exe'),
+      join(dist_node_bin, 'node.exe'))
+    ln(
+      '-sf',
+      join(BUILD_LIB_DIR, target_node, 'node.exe.ignore'),
+      join(dist_node_bin, 'node.exe.ignore'))
+  } else {
+    ln(
+      '-sf',
+      join(BUILD_LIB_DIR, target_node, 'bin', 'node'),
+      join(dist_node_bin, 'node'))
+  }
+}
+
+const copy_default_config = (target_dist) => {
+  const default_yml = join(ROOT_DIR, '.ferret-default.yml')
+
+  echo('  -> Copying over meta package config')
+
+  if (!test('-d', join(target_dist, 'default'))) {
+    mkdir(join(target_dist, 'default'))
+  }
+
+  ln('-sf', default_yml, join(target_dist, 'default', '.ferret.yml'))
+
+  const target_default_dir = join(target_dist, 'default')
+
+  ls(join(ROOT_DIR, 'meta')).forEach((metapkg_name) => {
+    const root_meta_default_dir = join(ROOT_DIR, 'meta', metapkg_name, 'default')
+
+    if (!test('-d', root_meta_default_dir)) return
+    mkdir('-p', join(target_default_dir, metapkg_name))
+
+    ls('-AR', root_meta_default_dir).forEach((conf_item) => {
+      const conf_item_path = join(root_meta_default_dir, conf_item)
+      const target_path = join(target_default_dir, metapkg_name, conf_item)
+
+      if (test('-d', conf_item_path) && !test('-d', target_path)) {
+        mkdir('-p', target_path)
+      } else {
+        ln('-sf', conf_item_path, target_path)
+      }
+    })
+  })
+}
+
+const build_package = (target_os) => {
+  echo('==> Generating pre-compiled ' + target_os + ' package...')
+
+  let target_node
+  let full_target
+
+  if (target_os == 'mac') {
+    target_node = NODE_MAC
+    full_target = MAC_PKG_NAME
+  } else if (target_os == 'win') {
+    target_node = NODE_WIN
+    full_target = WIN_PKG_NAME
+  } else {
+    target_node = NODE_LIN
+    full_target = LIN_PKG_NAME
+  }
+
+  const target_dist = join(DIST_DIR, full_target)
+
+  mkdir('-p', target_dist)
+
+  echo('  -> Copying core modules to dist folder')
+  ln(
+    '-sf',
+    join(BUILD_DIR, 'node_modules'),
+    join(target_dist, 'node_modules'))
+
+  echo('  -> Copying over project info/license')
+  ln('-sf', join(ROOT_DIR, 'README.md'),    join(target_dist, 'README.md'))
+  ln('-sf', join(ROOT_DIR, 'CHANGELOG.md'), join(target_dist, 'CHANGELOG.md'))
+  ln('-sf', join(ROOT_DIR, 'LICENSE'),      join(target_dist, 'LICENSE'))
+
+  copy_default_config(target_dist)
+
+  // bin shims (cp b/c they use rel paths)
+  echo('  -> Copying over bin shim')
+  mkdir('-p', join(target_dist, 'bin'))
+  if (target_os == 'win') {
+    cp(
+      join(BUILD_DIR, 'bin', 'ferret.cmd'),
+      join(target_dist, 'bin', 'ferret.cmd'))
+  } else if (target_os == 'mac') {
+    cp(
+      join(BUILD_DIR, 'bin', 'ferret-mac'),
+      join(target_dist, 'bin', 'ferret'))
+  } else {
+    cp(
+      join(BUILD_DIR, 'bin', 'ferret'),
+      join(target_dist, 'bin', 'ferret'))
+  }
+
+  // dist needs lib/node map, and so do build-* scripts
+  echo('  -> Symlink lib/node (build) ')
+  copy_node_runtime(BUILD_DIR, target_node, target_os)
+  echo('  -> Symlink lib/node (dist)')
+  copy_node_runtime(target_dist, target_node, target_os)
+
+  if (target_os == 'win') {
+    echo('  -> Zipping package')
+    const archive_name = full_target + '.zip'
+    cd(target_dist)
+    exec(`zip -qr ${join('..', archive_name)} *`)
+    cd('-')
+  } else {
+    echo('  -> Compressing package')
+    const archive_name = full_target + '.tar.gz'
+    tar.c(
+      {
+        sync: true,
+        gzip: true,
+        follow: true,
+        cwd: join(target_dist, '..'),
+        file: join(target_dist, '..', archive_name)
+      },
+      [ full_target ])
+  }
+}
+
+const compile = () => {
+  exec('npm run -s build:clean')
+
+  echo('==> Preparing build')
+
+  echo('  -> Compile core ts')
+  exec('npm run compile -s')
+
+  cd(BUILD_DIR)
+
+  if (!test('-d', 'lib')) {
+    mkdir('lib')
+  }
+
+  echo('  -> Installing modules')
+  exec('npm i')
+
+  echo('  -> Deduping modules')
+  exec('npm dedupe')
+
+  echo('  -> Pruning modules')
+  exec('npm prune')
+
+  echo('  -> Cleaning up unnecessary module files')
+  // HACK: -no-lockfile does not seem to do anything?
+  touch('yarn.lock')
+  exec('yarn autoclean -force')
+  rm('yarn.lock')
+
+  // until npm-check-updates removes snyk from prod deps
+  echo('  -> Cleaning up unnecessary modules')
+  find('node_modules')
+  .filter((tpath) => /snyk/i.test(tpath))
+  .forEach((tpath) => {
+    if (
+      test('-d', tpath) ||
+      test('-f', tpath) ||
+      test('-L', tpath)) {
+      echo('    -> rm -r ' + tpath)
+      rm('-r', tpath)
+    }
+  })
+  // edge case
+  const npm_tree_path = join('node_modules', '.bin', 'npm-tree')
+  echo('  -> ' + npm_tree_path)
+  rm('-r', npm_tree_path)
+
+  echo('  -> Ignorning non-essential .exe files (for Chocolatey)')
+  find('.')
+  .filter((tpath) => /\.exe$/i.test(tpath))
+  .forEach((tpath) => {
+    echo(`    -> touch ${tpath}.ignore`)
+    touch(`${tpath}.ignore`)
+  })
+
+  echo('  -> Checking for lengthy path names')
+  const too_long = find('node_modules')
+    .filter((tpath) => /.{190,}/.test(tpath))
+
+  if (too_long.length > 0) {
+    too_long.forEach((tpath) => {
+      echo("too long (" + tpath.length + "): " + tpath)
+    })
+    exit(1)
+  }
+
+  echo('  -> Copying over project info/license (build)')
+  ln('-sf', join(ROOT_DIR, 'README.md'),    join(BUILD_DIR, 'README.md'))
+  ln('-sf', join(ROOT_DIR, 'CHANGELOG.md'), join(BUILD_DIR, 'CHANGELOG.md'))
+  ln('-sf', join(ROOT_DIR, 'LICENSE'),      join(BUILD_DIR, 'LICENSE'))
+
+  rm('-r', join(BUILD_DIR, 'default'))
+  copy_default_config(BUILD_DIR)
+
+  cd('-')
+}
+
+const stats = () => {
+  if (!which("du")) return
+  echo('==> Stats')
+  exec(`du -hs ${DIST_DIR}`)
+  exec(`du -hs ${join(DIST_DIR, '*')}`)
+}
+
+(() => {
+  if (!OS_BUILD) {
+    echo("Usage: build [linux,mac,win]")
+    exit(1)
+  }
+
+  install_libs()
+
+  compile()
+
+  echo('==> (DEBUG) Using locally compiled ferret lib')
+  cp(
+    '-rf',
+    join(ROOT_DIR, 'lib', '*'),
+    join(BUILD_DIR, 'node_modules', '@forthright', 'ferret', 'lib', '.'))
+  cp(
+    '-rf',
+    join(ROOT_DIR, 'bin', 'ferret'),
+    join(BUILD_DIR, 'node_modules', '@forthright', 'ferret', 'bin', '.'))
+
+  build_package(OS_BUILD)
+
+  generate_checksums()
+
+  stats()
+})()

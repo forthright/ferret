@@ -1,0 +1,23 @@
+# Maintainer: Brent Lintner <brent.lintner@gmail.com>
+
+pkgname=ferret-bin
+pkgver=#FERRET_VERSION#
+pkgrel=1
+pkgdesc="Open platform for continuous software analysis."
+_pkgfull=ferret-$pkgver-linux-$CARCH
+arch=('x86_64')
+url="https://github.com/forthright/ferret"
+license=('MPL-2.0')
+provides=('ferret')
+source=(https://github.com/forthright/ferret_temp/releases/download/$pkgver/$_pkgfull.tar.gz)
+sha256sums=('#FERRET_SHA#')
+package() {
+  install -d "$pkgdir/usr/share/licenses/ferret"
+  install -d "$pkgdir/opt/ferret"
+  install -d "$pkgdir/usr/bin"
+
+  install -m644 "$srcdir/$_pkgfull/LICENSE" "$pkgdir/usr/share/licenses/ferret/LICENSE"
+
+  cp -R "$srcdir/$_pkgfull/"* "$pkgdir/opt/ferret"
+  ln -s "/opt/ferret/bin/ferret" "$pkgdir/usr/bin/ferret"
+}

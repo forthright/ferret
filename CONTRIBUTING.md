@@ -36,23 +36,58 @@ Test code is written in [CoffeeScript](http://coffeescript.org).
 
 ### Requirements
 
-* [Node.js]()
-* [Python]()
-* [MkDocs]()
-* [Git]()
-* [sh](http://zsh.sourceforge.net)
+For core lib development:
 
-### Getting Started
+* [Node.js]()
+* [Git]()
+* [EditorConfig](https://github.com/editorconfig)
+
+For non-essential dev tasks (docs, packaging, etc):
+
+* [info-zip]()
+* [curl]()
+* [MkDocs]()
+* [Homebrew](https://brew.sh)
+* [Chocolatey](https://chocolatey.org)
+* [dh-make](http://packaging.ubuntu.com/html/packaging-new-software.html)
+* [makepkg]()
+* [fedora-packager](https://docs.fedoraproject.org/quick-docs/en-US/creating-rpm-packages.html)
+
+Additional OSes required for all non-essential builds and testing:
+
+* [Windows]()
+* [macOS]()
+* [Ubuntu](http://packaging.ubuntu.com/html/getting-set-up.html)
+* [Fedora]()
+* [Arch Linux]()
+
+### Getting Setup
+
+If on Windows:
+
+    choco install zip unzip git nodejs curl mkdocs mkdocs-material
+
+If on macOS:
+
+    brew install zip unzip git nodejs python
+    pip install mkdocs mkdocs-matertial
+
+If on Arch Linux:
+
+    pacman -S zip unzip git nodejs python-pip
+    pip install mkdocs mkdocs-matertial
 
 Clone the repos:
 
     git clone git@github.com:forthright/ferret.git
-    git clone git@github.com:forthright/ferret-docs.git
     cd ferret
 
 Install packages:
 
+    npm i -g yarn npm
     npm i
+
+### Build Commands
 
 See all available build commands:
 
@@ -60,41 +95,35 @@ See all available build commands:
 
 Compile from `src` to `lib`:
 
-    npm run -s compile
+    npm run -s c
 
 To run the CLI locally:
 
     node bin/ferret -h
 
+### Testing
+
 To run tests:
 
     npm -s t
 
-To run without system level tests:
+### Docs
 
-    npm run -s test-fast
+Everything resides in `docs`.
 
-To run with system level tests:
+To develop run `mkdocs serve` in your project root:
 
-    npm run -s test-sys
-
-And to run with test coverage:
-
-    npm run -s test-cov
+### Dev Helpers
 
 To run compile task with file watch in the background:
 
     npm run dev
 
-To build binaries:
+### Compiling Release Packages
+
+To build packages:
 
     ./bin/build
 
-To build latest docs:
-
-    mkdocs build
-    [static-server] .docs-site
-
-To develop docs run:
-
-    mkdocs serve
+Note: Extracting some packages might hit the Windows path limit for CMD.exe and PowerShell.
+You might have to manually extract the archives via windows explorer with something like 7zip to initially get past this.

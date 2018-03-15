@@ -1,7 +1,8 @@
 {
   "name": "@forthright/ferret-javascript",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A Ferret meta plugin for analyzing your JavaScript code and ecosystem.",
+  "main": "lib/index.js",
   "files": [
     "default",
     "lib",

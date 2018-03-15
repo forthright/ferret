@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+require("./sh")
+
+const SPEC_FILE = 'ferret.spec'
+const BUILD_SPEC = join(BUILD_DIR, SPEC_FILE)
+
+echo('==> Generating .rpm')
+
+echo(`  -> Setting version: ${APP_VERSION}`)
+sed('-i', /#FERRET_VERSION#/g, APP_VERSION, BUILD_SPEC)
+
+cd(BUILD_DIR)
+
+echo('  -> Building')
+exec(`fedpkg -release ${FED_RELEASE} local`)
+
+echo('  -> Linting')
+exec(`fedpkg -release ${FED_RELEASE} lint`)
+
+cd('-')
+
+echo('  -> Moving rpm to dist')
+mv(
+  join(BUILD_DIR, TARGET_ARCH, '*.rpm'),
+  join(DIST_DIR, '.'))
+
+echo('  -> Cleaning build files')
+rm('-r', join(BUILD_DIR, TARGET_ARCH))
+rm(join(BUILD_DIR, '*.log'))
+rm(join(BUILD_DIR, '*.src.rpm'))
+
+echo('  -> git checkout - build/' + SPEC_FILE)
+exec('git checkout -- ' + BUILD_SPEC)
+
+generate_checksums()

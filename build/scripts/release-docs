@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+require("./sh")
+
+const HOME_DIR = process.cwd()
+const DOCS_DIR = join('..', 'ferret-docs')
+const TAG_VERSION = 'v' + APP_VERSION
+
+echo('==> Clearing public dir')
+rm('-r', join(DOCS_DIR, 'public'))
+mkdir(join(DOCS_DIR, 'public'))
+
+echo('==> Generating docs')
+exec('mkdocs build')
+
+echo('==> Copying over generated site data')
+cp('-r',
+   join(ROOT_DIR, '.docs-site', '*'),
+   join(DOCS_DIR, 'public', '.'))
+
+cd(DOCS_DIR)
+
+echo('==> Adding public folder changes')
+exec('git add -f public')
+echo('==> Creating release tag')
+exec(`git commit -m ${TAG_VERSION}`)
+echo('==> Cleaning up .git')
+exec('git gc')
+echo('==> Pushing source control updates')
+exec('git push origin master')
+echo('==> Deploying app')
+exec('git push production master')
+
+cd(HOME_DIR)

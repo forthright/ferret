@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+require("./sh")
+
+const LIN_DIST = join(DIST_DIR, LIN_PKG_NAME)
+const LIN_DIST_ARCHIVE = join(DIST_DIR, LIN_PKG_NAME + '.zip')
+
+const DEB_SRC_DIR_NAME = `ferret-${APP_VERSION}`
+const TEMP_BUILD_DIR = join(ROOT_DIR, '.build', 'debian')
+const TEMP_BUILD_DIR_DEB_SRC = join(TEMP_BUILD_DIR, DEB_SRC_DIR_NAME)
+
+const LINTIAN_IGNORE = [
+  'dir-or-file-in-opt',
+  'extra-license-file',
+  'executable-not-elf-or-script',
+  'unusual-interpreter',
+  'embedded-javascript-library',
+  'script-not-executable'
+]
+
+echo('==> Generating .deb')
+
+echo('  -> Cleaning temp build dir')
+if (test('-d', TEMP_BUILD_DIR)) rm(TEMP_BUILD_DIR)
+mkdir('-p', TEMP_BUILD_DIR)
+
+echo('  -> Creating deb pkg folder structure')
+ln('-sf', BUILD_DIR, TEMP_BUILD_DIR_DEB_SRC)
+
+cd(TEMP_BUILD_DIR_DEB_SRC)
+
+echo('  -> Building deb')
+exec('dpkg-buildpackage -b -tc')
+
+const DEB_FILE = join('..', '*.deb')
+const CHANGES_FILE = join('..', '*.changes')
+
+echo('  -> Linting deb')
+exec(`lintian -suppress-tags '${LINTIAN_IGNORE.join(",")}' ${DEB_FILE}`)
+
+echo('  -> Moving deb to dist')
+mv(DEB_FILE, DIST_DIR)
+mv(CHANGES_FILE, DIST_DIR)
+
+cd('-')
+
+generate_checksums()

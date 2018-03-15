@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>ferret</id>
+    <title>ferret</title>
+    <description>Open platform for continuous code analysis</description>
+    <version>#FERRET_VERSION#</version>
+    <authors>Brent Lintner</authors>
+    <owners>Forthright, Inc.</owners>
+    <!--<packageSourceUrl></packageSourceUrl>-->
+    <projectUrl>https://github.com/forthright/ferret</projectUrl>
+    <tags>ferret analysis</tags>
+  </metadata>
+</package>

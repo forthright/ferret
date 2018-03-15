@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+require("./sh")
+
+let level = process.argv[2] || 'patch'
+
+// -------------------
+//  Compile
+// -------------------
+
+echo('==> Cleaning build')
+exec('npm run -s compile:clean')
+
+echo('==> Compiling ts')
+exec('npm run -s compile')
+
+// -------------------
+//  Release
+// -------------------
+
+echo('==> Adding compiled lib to source control')
+exec('git add -f lib')
+
+// TODO: sign commits and releases and push/publish manually
+
+echo('==> Running release script')
+exec(`npx release-it -i ${level}`)
+
+// -------------------
+//  Release Docs
+// -------------------
+
+// TODO: commit/push homebrew-tap as well?
+echo('==> Releasing docs')
+exec('npm run -s release:docs')

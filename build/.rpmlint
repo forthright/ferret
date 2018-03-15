@@ -1,0 +1,8 @@
+addFilter('dir-or-file-in-opt')
+addFilter('script-without-shebang')
+addFilter('non-standard-executable-perm')
+addFilter('non-executable-script')
+addFilter('zero-length')
+addFilter('wrong-script-interpreter')
+addFilter('hidden-file-or-dir')
+addFilter('manpage-not-compressed')

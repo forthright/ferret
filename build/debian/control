@@ -1,0 +1,9 @@
+Source: ferret
+Section: misc
+Priority: optional
+Maintainer: Brent Lintner <brent.lintner@gmail.com>
+Homepage: https://github.com/forthright/ferret_temp
+
+Package: ferret
+Architecture: amd64
+Description: Open platform for continuous code analysis

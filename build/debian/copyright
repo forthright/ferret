@@ -1,0 +1,6 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: ferret
+Source: <https://github.com/forthright/ferret>
+
+Copyright: 2016 Brent Lintner <brent.lintner@gmail.com>
+License: MPL-2.0

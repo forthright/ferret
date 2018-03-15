@@ -1,7 +1,7 @@
 site_name: Ferret
 site_author: Brent Lintner
 site_description: Documentation for Ferret and FerretCI.
-copyright: 'Copyright &copy; 2016 Forthright, Inc.'
+copyright: 'Copyright &copy; 2018 Forthright, Inc.'
 site_dir: .docs-site
 repo_url: https://github.com/forthright/ferret
 docs_dir: docs

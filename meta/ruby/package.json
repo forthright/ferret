@@ -1,7 +1,8 @@
 {
   "name": "@forthright/ferret-ruby",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "A Ferret meta plugin for analyzing your Ruby code and ecosystem.",
+  "main": "lib/index.js",
   "files": [
     "default",
     "lib",
@@ -26,7 +27,7 @@
     "@forthright/ferret-bundler-audit": "^0.3.6",
     "@forthright/ferret-bundler-outdated": "^0.1.3",
     "@forthright/ferret-rubocop": "^0.2.4",
-    "@forthright/ferret-rubycritic": "^0.3.0"
+    "@forthright/ferret-rubycritic": "^0.3.2"
   },
   "peerDependencies": {
     "@forthright/ferret": "^0.19.3"
