@@ -27,17 +27,11 @@ Using [Chocolatey](https://chocolatey.org/):
 
 #### Ubuntu
 
-(unless we just use build.opensuse.org?)
-
 Using a custom [PPA](https://launchpad.net/~brentlintner/+archive/ubuntu/ferret-code):
 
     add-apt-repository ....
     apt update
     apt install ferret-code
-
-#### Debian
-
-Use [build.opensuse.org](https://build.opensuse.org/).
 
 #### Arch Linux
 
@@ -46,26 +40,11 @@ Using an [AUR](https://aur.archlinux.org/packages/ferret) package:
     pacman -S pacaur
     pacaur -S ferret
 
-#### openSUSE
+#### Other Distros
 
-Using an [build.opensuse.org](https://build.opensuse.org/):
+More are planned (specifically `rpm` and `flatpak`).
 
-    ....
-    yast install ferret
-
-#### Fedora
-
-Using an [build.opensuse.org](https://build.opensuse.org/):
-
-    ....
-    dnf install ferret
-
-#### CentOS
-
-Using an [build.opensuse.org](https://build.opensuse.org/):
-
-    yum-....
-    yum install ferret
+Pleasel [open an issue](https://github.com/forthright/ferret/issues) if you want another distro/platform supported!
 
 ### Platform Binaries
 
@@ -80,7 +59,7 @@ Grab a tarball from the [Releases](https://github.com/forthright/ferret/releases
 
 Or, similarly, on Windows:
 
-    ferret.exe -h
+    ferret.cmd -h
 
 ### Install By "Source"
 
@@ -95,11 +74,23 @@ To install packages manually, or if you are familiar with an npm setup:
     npm i --save-dev @forthright/ferret-comment
     npm i --save-dev @forthright/ferret-typescript
     npm i --save-dev @forthright/ferret-....
+    npx ferret configure
+    npx ferret analyze
 
-For more details on installing via `npm` see [here](/lang/#plugins).
+### Installing Custom Plugins
+
+To install custom plugins on top of a binary or package manager install:
+
+    cd my_project/
+    npm i --save-dev @forthright/ferret
+    npm i --save-dev ferret-my-plugin
+    ferret analyze -p my-plugin
+
+Note: If you use something like `npx ferret` in this case,
+it will *not* be able to run globally installed plugins.
 
 ## Checking The Install
 
 To see exactly what plugins and versions are being used, you can run:
 
-    ferret modules
+    ferret version
