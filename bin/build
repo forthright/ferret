@@ -123,9 +123,9 @@ prepare() {
   cd -
 }
 
-clean
+#clean
 
-prepare
+#prepare
 
 get_node_pkgs
 
