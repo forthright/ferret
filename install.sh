@@ -4,7 +4,7 @@ set -e
 
 ARCH=`uname -m`
 OS=`uname -s`
-VERSION=0.19.6
+VERSION="0.19.6"
 
 # Note: Should we be proactive and use /var/tmp instead?
 TMP_PATH=/tmp/ferret
@@ -12,14 +12,14 @@ INSTALL_DIR=/opt/ferret
 OPT_BIN_FILE=/opt/ferret/bin/ferret
 USR_BIN_FILE=/usr/bin/ferret
 
-DEB_FILE=ferret_$VERSION-1_amd64.deb
-RPM_FILE=ferret-$VERSION-1.x86_64.rpm
+DEB_FILE="ferret_$VERSION-1_amd64.deb"
+RPM_FILE="ferret-$VERSION-1.x86_64.rpm"
 
-LIN_DIR=ferret-$VERSION-linux-x86_64
-LIN_FILE=$LIN_DIR.tar.gz
+LIN_DIR="ferret-$VERSION-linux-x86_64"
+LIN_FILE="$LIN_DIR.tar.gz"
 
-MAC_DIR=ferret-$VERSION-mac-x86_64
-MAC_FILE=$MAC_DIR.tar.gz
+MAC_DIR="ferret-$VERSION-mac-x86_64"
+MAC_FILE="$MAC_DIR.tar.gz"
 
 SUM_FILE=sha256_sums.txt
 
@@ -30,15 +30,7 @@ PACKAGER=""
 
 cleanup() {
   if [ -d "$TMP_PATH" ]; then
-    echo "==> Cleaning up tmp files..."
-    rm -rf "$TMP_PATH" > /dev/null
-  fi
-
-  if [ command -v ferret > /dev/null ]; then
-    echo "==> Fail! Can't detect $USR_BIN_FILE?"
-  else
-    echo "==> Success! Run \`ferret -h\` for usage."
-    exit(1)
+    rm -rf "$TMP_PATH"
   fi
 }
 trap cleanup EXIT
@@ -50,12 +42,12 @@ as_root() {
     "$@"
   else
     echo "We need root permission to run $@"
-    if [ command -v sudo > /dev/null ]; then
+    if [ ! -z $(command -v sudo) ]; then
       sudo -k "$@"
-    elif [ command -v su > /dev/null ]; then
+    elif [ ! -z $(command -v su) ]; then
       su root -c "$@"
     else
-      echo "Can't continue without sudo/su." && exit(1)
+      echo "Can't continue without sudo/su." && exit 1
     fi
   fi
 }
@@ -71,45 +63,47 @@ check_arch() {
     ;;
   *)
     echo ""
-    echo "$ARCH not supported" && exit(1)
+    echo "$ARCH not supported" && exit 1
     ;;
   esac
 }
 
 check_packager() {
-  if [ command -v pacman > /dev/null ]; then
+  if [ ! -z "$(command -v pacman)" ]; then
     PACKAGER="pacman"
-  elif [ command -v yast > /dev/null ]; then
+  elif [ ! -z "$(command -v yast)" ]; then
     PACKAGER="yast"
-  elif [ command -v dnf > /dev/null ]; then
+  elif [ ! -z "$(command -v dnf)" ]; then
     PACKAGER="dnf"
-  elif [ command -v yum > /dev/null ]; then
+  elif [ ! -z "$(command -v yum)" ]; then
     PACKAGER="yum"
   # TODO
-  #elif [ command -v add-apt-repository > /dev/null ]; then
+  #elif [ ! -z "$(command -v add-apt-repository)" ]; then
     #PACKAGER="add-apt-repository"
-  #elif [ command -v apt > /dev/null ]; then
-  elif [ command -v dpkg > /dev/null ]; then
+    #elif [ ! -z "$(command -v apt)" ]; then
+  elif [ ! -z "$(command -v dpkg)" ]; then
     PACKAGER="dpkg"
-  elif [ "$OS" = "Darwin" ] && [ command -v brew > /dev/null ]; then
+  elif [ "$OS" = "Darwin" ] && [ ! -z "$(command -v brew)" ]; then
     PACKAGER="brew"
   fi
 }
 
 check_for_shasum() {
-  if [ ! command -v shasum > /dev/null ]; then
+  if [ -z "$(command -v shasum)" ]; then
     echo ""
-    echo "Need shasum installed" && exit(1)
+    echo "Need shasum installed" && exit 1
   fi
 }
 
 check_can_download() {
-  if [ command -v curl > /dev/null ]; then
+  if [ ! -z "$(command -v curl)" ]; then
     DOWNLOAD="curl -fL "
-  elif [ command -v wget > /dev/null]; then
+  elif [ ! -z "$(command -v wget)" ]; then
     DOWNLOAD="wget -qO- "
   else
-    echo "Need wget or curl installed" && exit(1)
+    echo ""
+    echo "Need wget or curl installed"
+    exit 1
   fi
 }
 
@@ -152,9 +146,13 @@ get_tarball() {
 install_files() {
   $PKGDIR=$0
   echo "==> Installing files..."
-  mkdir -p $INSTALL_DIR
-  mv "$PKGDIR" /opt/ferret
-  ln -s $OPT_BIN_FILE $USR_BIN_FILE
+  if [ -d "$INSTALL_DIR" ]; then
+    # in case we have a previous install
+    as_root rm -rf $INSTALL_DIR
+  fi
+  as_root mkdir -p $INSTALL_DIR
+  as_root cp -r $PKGDIR/* $INSTALL_DIR
+  as_root ln -s $OPT_BIN_FILE $USR_BIN_FILE
 }
 
 install_mac_tarball(){
@@ -177,7 +175,7 @@ install_via_tarball() {
   else
     echo "$OS-$ARCH not supported. Please see manual instructions:"
     echo "  https://docs.ferretci.com/start"
-    exit(0)
+    exit 0
   fi
 }
 
@@ -212,16 +210,16 @@ install_via_homebrew() {
   brew install -y ferret
 }
 
-install() {
-  echo "==> Configuring environment"
+configure() {
+  mkdir -p "$TMP_PATH"
+
+  check_arch
+
   check_for_shasum
   echo "  -> shasum: ok"
 
   echo "  -> curl/wget: ok"
   check_can_download
-
-  check_arch
-  echo "  -> $ARCH: supported"
 
   echo "==> Getting checksums"
   get_shasums
@@ -236,7 +234,9 @@ install() {
     echo "  -> Using $PACKAGER"
   fi
 
-  echo "==> Installing package"
+}
+
+install() {
   case $PACKAGER in
     pacman)
       install_via_pacman
@@ -262,6 +262,22 @@ install() {
       install_via_tarball
       ;;
   esac
+}
+
+install() {
+  echo "==> Configuring environment"
+  configure
+
+  echo "==> Installing package"
+  install
+
+  echo ""
+  if [ ! -z "$(command -v ferret)" ]; then
+    echo "Success! Run \`ferret -h\` for usage."
+    exit 1
+  else
+    echo "Fail! Can't detect $USR_BIN_FILE?"
+  fi
 }
 
 install
