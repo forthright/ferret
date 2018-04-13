@@ -63,7 +63,7 @@ its hosted service to provide rich web reports, intelligent insights, and third 
 
 See [docs.ferretci.com](https://docs.ferretci.com).
 
-#### Contributing
+## Contributing
 
 Any contributions are welcome and appreciated!
 
@@ -83,10 +83,9 @@ This project uses [Semver](http://semver.org).
 
 #### Donations
 
-A lot of work and cost goes into development and maintenance of this project.
+If you find this useful and want to support the people making it you can:
 
-If you find this useful and want to support the people making it:
-
-* Purchase a [private](https://ferretci.com/pricing) subscription
-* Make a [non-monetary](CONTRIBUTING.md) contribution
-* Or just [say hi](https://twitter.com/ferretci)!
+* Use a [Private](https://ferretci.com/pricing) subscription plan
+* Help fund the project on [Open Collective]().
+* Give the project a shiny GitHub star
+* Follow us on [Twitter](https://twitter.com/ferretci)!
