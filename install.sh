@@ -41,7 +41,7 @@ as_root() {
   if [ $UID -eq 0 ]; then
     "$@"
   else
-    echo "We need root permission to run $@"
+    echo "We need to run a few commands as root..."
     if [ ! -z $(command -v sudo) ]; then
       sudo -k "$@"
     elif [ ! -z $(command -v su) ]; then
@@ -91,7 +91,8 @@ check_packager() {
 check_for_shasum() {
   if [ -z "$(command -v shasum)" ]; then
     echo ""
-    echo "Need shasum installed" && exit 1
+    echo "Need shasum installed"
+    exit 1
   fi
 }
 
