@@ -50,6 +50,6 @@ global.generate_checksums = () => {
     .filter((tpath) => /nupkg|tar|zip|deb|rpm/i.test(tpath))
     .forEach((tpath) => {
       const sum = sha256sum(join(DIST_DIR, tpath))
-      echo(`${sum}  ${tpath}\n`).toEnd(sha_sums)
+      echo(`${sum}  ${tpath}`).toEnd(sha_sums)
     })
 }

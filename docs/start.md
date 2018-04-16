@@ -75,7 +75,7 @@ Grab the [rpm]() for now:
 
 #### Other OSes
 
-Ideally things like like some [BSDs](), and
+Ideally things like some [BSDs](), and
 even [Flatpak]() or [Snap]() are supported in the future.
 
 Don't see your favourite package manager yet?
@@ -86,9 +86,9 @@ Please [open and issue]() and tell us!
 
 There are tarball and zip packages available for Linux, Windows and macOS.
 
-Grab a tarball from the [Releases](https://github.com/forthright/ferret/releases) page.
+Grab a tarball and `sha_sums.txt` from the [Releases](https://github.com/forthright/ferret/releases) page.
 
-    echo "SHASUM  ferret-v0.19.6-linux-x86_64.tar.gz" | sha256sum -c
+    shasum -a 256 -c sha_sums.txt
     tar -xvf ferret-v0.19.6-linux-x86_64.tar.gz
     cd ferret-v0.19.6-linux-x86_64
     ./bin/ferret -h

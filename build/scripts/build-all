@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+require("./sh")
+
+exec('npm run -s build:clean')
+exec('npm run -s build:linux')
+exec('npm run -s build:mac')
+exec('npm run -s build:win')

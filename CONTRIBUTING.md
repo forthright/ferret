@@ -15,6 +15,10 @@ Even if you are uncomfortable with code, an issue or question is welcome.
 Note: If you are reporting a bug or feature request
 for [ferretci.com](https://ferretci.com) itself, please see [forthright/ferretci.com](https://github.com/forthright/ferretci.com) instead.
 
+## Contributing Documentation
+
+See the [Docs](#docs) section.
+
 ## Contributing Code
 
 All you need to do is submit a [Pull Request](https://github.com/forthright/ferret/pulls).
@@ -125,5 +129,6 @@ To build packages:
 
     ./bin/build
 
-Note: Extracting some packages might hit the Windows path limit for CMD.exe and PowerShell.
-You might have to manually extract the archives via windows explorer with something like 7zip to initially get past this.
+Note: Extracting Node.js's zipfile might hit the Windows path limit for CMD.exe and PowerShell.
+If it is regarding `node_modules/npm...` you can safely ignore this as this is not copied over
+during packaging.

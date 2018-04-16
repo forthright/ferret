@@ -31,7 +31,10 @@ echo('  -> Generating tar.xz')
 exec('makepkg -C')
 
 echo('  -> Linting package')
-exec(`namcap ${join('..', '*')}`)
+exec(`namcap ${join('..', '*.tar.xz')}`)
+
+echo('  -> Linting PKGBUILD')
+exec(`namcap ${join('..', 'PKGBUILD')}`)
 
 echo('  -> Moving package+PKGBUILD to dist')
 

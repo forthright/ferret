@@ -21,6 +21,8 @@ const install_libs = () => {
   const lib_win_path = join(BUILD_LIB_DIR, NODE_WIN)
   const lib_win_zip_path = lib_win_path + '.zip'
 
+  rm(BUILD_LIB_DIR, 'node')
+
   if (OS_BUILD == 'linux' && !test('-d', lib_lin_path)) {
     if (test('-d', lib_lin_path)) return
     const lin_node_url = NODE_BUILDS + '/' + NODE_LIN + '.tar.gz'
@@ -205,8 +207,6 @@ const build_package = (target_os) => {
 }
 
 const compile = () => {
-  exec('npm run -s build:clean')
-
   echo('==> Preparing build')
 
   echo('  -> Compile core ts')
@@ -230,7 +230,7 @@ const compile = () => {
   echo('  -> Cleaning up unnecessary module files')
   // HACK: -no-lockfile does not seem to do anything?
   touch('yarn.lock')
-  exec('yarn autoclean -force')
+  exec('yarn autoclean --force')
   rm('yarn.lock')
 
   // until npm-check-updates removes snyk from prod deps

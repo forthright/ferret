@@ -39,10 +39,10 @@ Ferret is a powerful, general purpose code quality tool designed for any languag
 It makes use of your existing build environment to run fast, secure local analysis while using
 its hosted service to provide rich web reports, intelligent insights, and third party integrations.
 
-#### Features
+### Features
 
 * :electric_plug: Easy to install packages for your CI server or dev machine
-* :fire: Supports [14+ languages & environments](https://docs.ferretci.com/lang) (JavaScript, TypeScript, Node.js, npm, Ruby, Rails, Bundler, PHP etc.)
+* :fire: Supports [10+ languages & environments](https://docs.ferretci.com/lang) (JavaScript, TypeScript, Node.js, npm, Ruby, Rails, Bundler, PHP etc.)
 * :muscle: Tracks complex code, outdated dependencies, code style & maintainability, test coverage holes, security alerts and [more]()
 * :raising_hand: Integrates seamlessly with traditional linter tools and development workflows
 * :shower: Schedules routine builds for popular services like CircleCI, AppVeyor, and Codeship
@@ -50,14 +50,6 @@ its hosted service to provide rich web reports, intelligent insights, and third 
 * :email: Keeps you notified of new issues and insights via email and Slack
 * :wrench: Flexible, modular, easy to use [plugin system]()
 * :hearts: Available on [Windows](), [macOS](), [Ubuntu](), [Fedora](), [Arch Linux]() and [more]()
-
-#### Demo
-
-<p align="center">
-  <a href="https://asciinema.org/a/137383" target="_blank">
-    <img src="https://user-images.githubusercontent.com/93340/30343065-0c55ca06-97ca-11e7-95a8-bd4605f8c452.png"/>
-  </a>
-</p>
 
 ## Installation & Usage
 
@@ -69,19 +61,19 @@ Any contributions are welcome and appreciated!
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for more info.
 
-#### Licensing
+### Licensing
 
 This project is licensed under the [MPL-2.0](LICENSE) license.
 
-#### Versioning
+### Versioning
 
 This project uses [Semver](http://semver.org).
 
-#### Maintainers
+### Maintainers
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)
 
-#### Donations
+### Donations
 
 If you find this useful and want to support the people making it you can:
 

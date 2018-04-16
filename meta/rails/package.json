@@ -28,6 +28,7 @@
     "@forthright/ferret-brakeman": "^0.3.4",
     "@forthright/ferret-eslint": "^0.1.15",
     "@forthright/ferret-rails-best-practices": "^0.3.2",
+    "@forthright/ferret-ruby": "^0.2.3",
     "@forthright/ferret-sass-lint": "^0.4.0",
     "@forthright/ferret-slim-lint": "^0.3.3"
   },
