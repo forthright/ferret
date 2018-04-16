@@ -155,7 +155,7 @@ install_files() {
   as_root ln -s $OPT_BIN_FILE $USR_BIN_FILE
 }
 
-install_mac_tarball(){
+install_mac_tarball() {
   get_tarball $MAC_FILE
   extract_tarball $MAC_FILE
   as_root install_files $MAC_DIR
