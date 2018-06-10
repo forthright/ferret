@@ -21,7 +21,8 @@ const install_libs = () => {
   const lib_win_path = join(BUILD_LIB_DIR, NODE_WIN)
   const lib_win_zip_path = lib_win_path + '.zip'
 
-  rm(BUILD_LIB_DIR, 'node')
+  rm('-r', BUILD_LIB_DIR, 'node')
+  mkdir(BUILD_LIB_DIR, 'node')
 
   if (OS_BUILD == 'linux' && !test('-d', lib_lin_path)) {
     if (test('-d', lib_lin_path)) return
